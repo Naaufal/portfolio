@@ -1,7 +1,7 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { X, ChevronLeft, ChevronRight, Camera, Palette, Heart, Share, Info, Eye, Download, Maximize, Minimize } from "lucide-react"
 import Navigation from "@/components/navigation"
@@ -11,11 +11,152 @@ interface GalleryItem {
   src: string
   title: string
   category: "vector" | "photography"
-  description: string
   likes: number
   uploadDate: Date
   resolution?: string
   tools?: string
+  width?: number
+  height?: number
+}
+
+// Skeleton Component
+const ImageSkeleton = ({ aspectRatio = "auto" }: { aspectRatio?: string }) => (
+  <div 
+    className="relative overflow-hidden rounded-xl border border-stone-700 bg-stone-800"
+    style={{ aspectRatio }}
+  >
+    <div className="absolute inset-0 bg-gradient-to-r from-stone-800 via-stone-700 to-stone-800 animate-pulse">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-stone-600/50 to-transparent animate-shimmer" 
+           style={{
+             backgroundSize: '200% 100%',
+             animation: 'shimmer 2s infinite linear'
+           }} />
+    </div>
+    
+    {/* Skeleton content */}
+    <div className="absolute bottom-4 left-4 right-4">
+      <div className="h-3 bg-stone-600 rounded mb-2 w-3/4"></div>
+      <div className="h-2 bg-stone-700 rounded w-1/2"></div>
+    </div>
+  </div>
+)
+
+// Custom hook for intersection observer
+const useIntersectionObserver = (options = {}) => {
+  const [isIntersecting, setIsIntersecting] = useState(false)
+  const targetRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const target = targetRef.current
+    if (!target) return
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsIntersecting(entry.isIntersecting)
+    }, {
+      threshold: 0.1,
+      rootMargin: '50px',
+      ...options
+    })
+
+    observer.observe(target)
+    return () => observer.unobserve(target)
+  }, [])
+
+  return [targetRef, isIntersecting] as const
+}
+
+// Gallery Item Component
+const GalleryItemComponent = ({ 
+  item, 
+  index, 
+  onClick 
+}: { 
+  item: GalleryItem
+  index: number
+  onClick: () => void 
+}) => {
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [targetRef, isVisible] = useIntersectionObserver()
+  const [shouldLoad, setShouldLoad] = useState(index < 6) // Load first 6 immediately
+  
+  useEffect(() => {
+    if (isVisible && !shouldLoad) {
+      // Add small delay for staggered effect
+      const timer = setTimeout(() => {
+        setShouldLoad(true)
+      }, index * 100)
+      return () => clearTimeout(timer)
+    }
+  }, [isVisible, shouldLoad, index])
+
+  return (
+    <div
+      ref={targetRef}
+      className={`break-inside-avoid cursor-pointer group transition-all duration-700 ${
+        shouldLoad && imageLoaded 
+          ? 'opacity-100 transform translate-y-0' 
+          : 'opacity-0 transform translate-y-4'
+      }`}
+      onClick={onClick}
+      style={{
+        transitionDelay: `${index * 50}ms` // Staggered animation
+      }}
+    >
+      <div className="relative overflow-hidden rounded-xl border border-stone-700 hover:border-amber-600 transition-all duration-500 hover:shadow-2xl hover:shadow-amber-600/10 group-hover:scale-[1.02]">
+        
+        {/* Show skeleton while loading */}
+        {!imageLoaded && shouldLoad && (
+          <div className="absolute inset-0 z-10">
+            <ImageSkeleton />
+          </div>
+        )}
+        
+        {/* Show static skeleton if not in viewport yet */}
+        {!shouldLoad && (
+          <ImageSkeleton aspectRatio={item.height && item.width ? `${item.width}/${item.height}` : "4/5"} />
+        )}
+
+        {/* Actual Image */}
+        {shouldLoad && (
+          <div className="relative">
+            <Image
+              src={item.src}
+              alt={item.title}
+              width={item.width || 400}
+              height={item.height || 500}
+              className={`w-full h-auto object-cover group-hover:scale-110 transition-all duration-700 ease-out ${
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onLoad={() => setImageLoaded(true)}
+              loading={index < 6 ? "eager" : "lazy"}
+              quality={85}
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+            />
+            
+            {/* Watermark */}
+            <div className="absolute bottom-2 right-2 text-xs text-white/30 font-mono">
+              naaufal
+            </div>
+            
+            {/* Hover Overlay */}
+            <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-all duration-500 flex items-end ${
+              imageLoaded ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'
+            }`}>
+              <div className="p-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
+                <p className="text-xs text-orange-200 mb-2 capitalize">{item.category}</p>
+                <div className="flex items-center gap-2 text-xs">
+                  <Heart className="w-3 h-3" />
+                  <span>{item.likes}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }
 
 const Gallery = () => {
@@ -24,13 +165,13 @@ const Gallery = () => {
   const [showInfo, setShowInfo] = useState(true)
   const [showShareDialog, setShowShareDialog] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
-  const [imageLoading, setImageLoading] = useState<number[]>([]) // Track loading images
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false)
 
   // Effect to handle URL hash and auto-open image
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.substring(1) // Remove the '#'
+      const hash = window.location.hash.substring(1)
       if (hash) {
         const imageId = parseInt(hash)
         const foundImage = galleryItems.find(item => item.id === imageId)
@@ -40,15 +181,17 @@ const Gallery = () => {
       }
     }
 
-    // Check hash on component mount
     handleHashChange()
-
-    // Listen for hash changes
     window.addEventListener('hashchange', handleHashChange)
+    
+    // Set initial load complete after a short delay
+    const timer = setTimeout(() => {
+      setInitialLoadComplete(true)
+    }, 500)
 
-    // Cleanup
     return () => {
       window.removeEventListener('hashchange', handleHashChange)
+      clearTimeout(timer)
     }
   }, [])
 
@@ -60,15 +203,6 @@ const Gallery = () => {
       document.title = "Gallery - Naaufal Portfolio"
     }
   }, [selectedImage])
-
-  // Handle image loading
-  const handleImageLoad = (imageId: number) => {
-    setImageLoading(prev => prev.filter(id => id !== imageId))
-  }
-
-  const handleImageLoadStart = (imageId: number) => {
-    setImageLoading(prev => [...prev, imageId])
-  }
 
   // Toggle fullscreen mode
   const toggleFullscreen = () => {
@@ -88,7 +222,6 @@ const Gallery = () => {
     if (selectedImage) {
       window.history.pushState(null, '', `#${selectedImage.id}`)
     } else {
-      // Clear hash when modal is closed
       if (window.location.hash) {
         window.history.pushState(null, '', window.location.pathname)
       }
@@ -113,7 +246,6 @@ const Gallery = () => {
     if (diffInWeeks < 4) return `${diffInWeeks} week${diffInWeeks > 1 ? 's' : ''} ago`
     if (diffInMonths < 1) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`
     
-    // If more than 1 month, show absolute date
     return uploadDate.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 
@@ -143,7 +275,6 @@ const Gallery = () => {
         setShowShareDialog(false)
       }, 1500)
     } catch (error) {
-      // Fallback for browsers that don't support clipboard API
       const textArea = document.createElement('textarea')
       textArea.value = `${window.location.origin}${window.location.pathname}#${selectedImage?.id}`
       document.body.appendChild(textArea)
@@ -164,187 +295,204 @@ const Gallery = () => {
       src: "/images/vector/vector1.jpg",
       title: "Portrait Vector Art - Hijab Style",
       category: "vector",
-      description: "",
       likes: 45,
-      uploadDate: new Date(2025, 6, 27), // 3 days ago from July 30
+      uploadDate: new Date(2025, 6, 27),
       resolution: "2000 x 2400 px",
-      tools: "Adobe Illustrator, Pen Tool, Gradient Mesh"
+      tools: "Adobe Illustrator, Pen Tool, Gradient Mesh",
+      width: 400,
+      height: 480
     },
     {
       id: 2,
       src: "/images/vector/vector2.jpg",
       title: "Portrait Vector Art - Alyssa",
       category: "vector",
-      description: "",
       likes: 52,
-      uploadDate: new Date(2025, 6, 23), // 1 week ago
+      uploadDate: new Date(2025, 6, 23),
       resolution: "1800 x 2200 px",
-      tools: "Adobe Illustrator, Typography Design"
+      tools: "Adobe Illustrator, Typography Design",
+      width: 400,
+      height: 489
     },
     {
       id: 3,
       src: "/images/vector/vector3.jpg",
       title: "Electric Crack Portrait",
       category: "vector",
-      description: "",
       likes: 67,
-      uploadDate: new Date(2025, 6, 16), // 2 weeks ago
+      uploadDate: new Date(2025, 6, 16),
       resolution: "2400 x 2400 px",
-      tools: "Adobe Illustrator, Photoshop, Digital Effects"
+      tools: "Adobe Illustrator, Photoshop, Digital Effects",
+      width: 400,
+      height: 400
     },
     {
       id: 4,
       src: "/images/fotografi/fotografi1.jpg",
       title: "Golden Hour Cityscape",
       category: "photography",
-      description: "",
       likes: 38,
-      uploadDate: new Date(2025, 5, 30), // 1 month ago
+      uploadDate: new Date(2025, 5, 30),
       resolution: "4096 x 2731 px",
-      tools: "Canon EOS R5, Lightroom, Natural Lighting"
+      tools: "Canon EOS R5, Lightroom, Natural Lighting",
+      width: 400,
+      height: 267
     },
     {
       id: 5,
       src: "/images/vector/vector4.jpg",
       title: "Robert Downey Jr Portrait",
       category: "vector",
-      description: "",
       likes: 38,
-      uploadDate: new Date(2025, 5, 15), // 1.5 months ago
+      uploadDate: new Date(2025, 5, 15),
       resolution: "3000 x 4000 px",
-      tools: "Digital Painting, Photoshop, Color Grading"
+      tools: "Digital Painting, Photoshop, Color Grading",
+      width: 400,
+      height: 533
     },
     {
       id: 6,
       src: "/images/fotografi/fotografi2.jpg",
       title: "Sample Photography",
       category: "photography",
-      description: "",
       likes: 38,
-      uploadDate: new Date(2025, 4, 30), // 2 months ago
+      uploadDate: new Date(2025, 4, 30),
       resolution: "3840 x 2560 px",
-      tools: "DSLR Camera, Adobe Lightroom"
+      tools: "DSLR Camera, Adobe Lightroom",
+      width: 400,
+      height: 267
     },
     {
       id: 7,
       src: "/images/fotografi/fotografi3.jpg",
       title: "Color Palette Study",
       category: "photography",
-      description: "",
       likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      uploadDate: new Date(2025, 3, 30),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Photoshop, Color Theory, Digital Art",
+      width: 400,
+      height: 300
     },
     {
       id: 8,
       src: "/images/fotografi/fotografi4.jpg",
-      title: "Color Palette Study",
+      title: "Architectural Study",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 42,
+      uploadDate: new Date(2025, 3, 25),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Wide Angle Lens, HDR Processing",
+      width: 400,
+      height: 300
     },
     {
       id: 9,
       src: "/images/fotografi/fotografi5.jpg",
-      title: "Color Palette Study",
+      title: "Natural Landscape",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 51,
+      uploadDate: new Date(2025, 3, 20),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Drone Photography, Color Grading",
+      width: 400,
+      height: 300
     },
     {
       id: 10,
       src: "/images/fotografi/fotografi6.jpg",
-      title: "Color Palette Study",
+      title: "Urban Portrait",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 29,
+      uploadDate: new Date(2025, 3, 15),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Street Photography, Natural Light",
+      width: 400,
+      height: 300
     },
     {
       id: 11,
       src: "/images/fotografi/fotografi7.jpg",
-      title: "Color Palette Study",
+      title: "Minimalist Composition",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 47,
+      uploadDate: new Date(2025, 3, 10),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Composition Study, Lightroom",
+      width: 400,
+      height: 300
     },
     {
       id: 12,
       src: "/images/fotografi/fotografi8.jpg",
-      title: "Color Palette Study",
+      title: "Street Art Documentation",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 35,
+      uploadDate: new Date(2025, 3, 5),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Documentary Photography, Color Pop",
+      width: 400,
+      height: 300
     },
     {
       id: 13,
       src: "/images/fotografi/fotografi9.jpg",
-      title: "Color Palette Study",
+      title: "Nature Macro",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 61,
+      uploadDate: new Date(2025, 2, 28),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Macro Lens, Focus Stacking",
+      width: 400,
+      height: 300
     },
     {
       id: 14,
       src: "/images/fotografi/fotografi10.jpg",
-      title: "Color Palette Study",
+      title: "Sunset Silhouette",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 73,
+      uploadDate: new Date(2025, 2, 25),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Golden Hour, Silhouette Technique",
+      width: 400,
+      height: 300
     },
     {
       id: 15,
       src: "/images/fotografi/fotografi11.jpg",
-      title: "Color Palette Study",
+      title: "Abstract Patterns",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 44,
+      uploadDate: new Date(2025, 2, 20),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Pattern Recognition, Geometric Study",
+      width: 400,
+      height: 300
     },
     {
       id: 16,
       src: "/images/fotografi/fotografi12.jpg",
-      title: "Color Palette Study",
+      title: "Motion Blur Study",
       category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      likes: 33,
+      uploadDate: new Date(2025, 2, 15),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Long Exposure, Motion Capture",
+      width: 400,
+      height: 300
     },
     {
       id: 17,
       src: "/images/vector/vector5.jpg",
-      title: "Color Palette Study",
-      category: "photography",
-      description: "",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30), // 3 months ago
+      title: "Abstract Vector Design",
+      category: "vector",
+      likes: 56,
+      uploadDate: new Date(2025, 2, 10),
       resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art"
+      tools: "Vector Art, Abstract Design",
+      width: 400,
+      height: 300
     },
   ]
 
@@ -372,6 +520,18 @@ const Gallery = () => {
   return (
     <>
       <Navigation />
+      
+      {/* Add custom CSS for shimmer animation */}
+      <style jsx global>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 2s infinite linear;
+        }
+      `}</style>
+
       <div className="min-h-screen pt-20 relative overflow-hidden" style={{
         background: `
           radial-gradient(600px circle at 25% 25%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
@@ -392,7 +552,9 @@ const Gallery = () => {
         
         <div className="container mx-auto px-6 py-12 relative z-10">
           {/* Header */}
-          <div className="text-center mb-12">
+          <div className={`text-center mb-12 transition-all duration-1000 ${
+            initialLoadComplete ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
+          }`}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 text-stone-100">Gallery</h1>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 mx-auto rounded-full mb-6" />
             <p className="text-xl text-stone-400 max-w-2xl mx-auto">
@@ -401,7 +563,9 @@ const Gallery = () => {
           </div>
 
           {/* Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className={`flex flex-wrap justify-center gap-4 mb-12 transition-all duration-1000 delay-300 ${
+            initialLoadComplete ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
+          }`}>
             <Button
               variant={filter === "all" ? "default" : "outline"}
               onClick={() => setFilter("all")}
@@ -433,44 +597,13 @@ const Gallery = () => {
 
           {/* Gallery Grid - Masonry Style */}
           <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-            {filteredItems.map((item) => (
-              <div
+            {filteredItems.map((item, index) => (
+              <GalleryItemComponent
                 key={item.id}
-                className="break-inside-avoid cursor-pointer group"
+                item={item}
+                index={index}
                 onClick={() => setSelectedImage(item)}
-              >
-                <div className="relative overflow-hidden rounded-xl border border-stone-700 hover:border-amber-600 transition-all duration-500 hover:shadow-2xl hover:shadow-amber-600/10 group-hover:scale-[1.02]">
-                  {/* Loading skeleton */}
-                  {imageLoading.includes(item.id) && (
-                    <div className="absolute inset-0 bg-stone-800 animate-pulse rounded-xl"></div>
-                  )}
-                  
-                  <img
-                    src={item.src || "/placeholder.svg"}
-                    alt={item.title}
-                    className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    onLoadStart={() => handleImageLoadStart(item.id)}
-                    onLoad={() => handleImageLoad(item.id)}
-                    loading="lazy"
-                  />
-                  
-                  {/* Subtle watermark */}
-                  <div className="absolute bottom-2 right-2 text-xs text-white/30 font-mono">
-                    naaufal
-                  </div>
-                  
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end">
-                    <div className="p-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
-                      <p className="text-xs text-orange-200 mb-2 capitalize">{item.category}</p>
-                      <div className="flex items-center gap-2 text-xs">
-                        <Heart className="w-3 h-3" />
-                        <span>{item.likes}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              />
             ))}
           </div>
 
@@ -481,7 +614,7 @@ const Gallery = () => {
           )}
         </div>
 
-        {/* Footer/Copyright - Moved to bottom */}
+        {/* Footer */}
         <div className="text-center py-8 border-t border-stone-800 mt-12 relative z-10">
           <p className="text-stone-500 text-sm">
             © 2025 Naaufal. All rights reserved. | Portfolio Gallery
@@ -620,10 +753,14 @@ const Gallery = () => {
                     ? 'calc(90vh - 140px)' 
                     : 'calc(90vh - 80px)' 
               }}>
-                <img
-                  src={selectedImage.src || "/placeholder.svg"}
+                <Image
+                  src={selectedImage.src}
                   alt={selectedImage.title}
+                  width={selectedImage.width || 800}
+                  height={selectedImage.height || 600}
                   className="max-w-full max-h-full object-contain"
+                  quality={95}
+                  priority
                 />
                 
                 {/* Image watermark on modal */}
@@ -695,9 +832,11 @@ const Gallery = () => {
               <h3 className="text-lg font-semibold text-stone-100 mb-4">Share this artwork</h3>
               
               <div className="flex items-center gap-3 mb-4">
-                <img
+                <Image
                   src={selectedImage?.src || "/placeholder.svg"}
-                  alt={selectedImage?.title}
+                  alt={selectedImage?.title || ""}
+                  width={48}
+                  height={48}
                   className="w-12 h-12 object-cover rounded-lg"
                 />
                 <div className="flex-1">
