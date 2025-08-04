@@ -17,7 +17,288 @@ interface GalleryItem {
   tools?: string
   width?: number
   height?: number
+  featured?: boolean
 }
+
+// Auto-ID Generator System
+let itemId = 1
+const createItem = (data: Omit<GalleryItem, 'id'>) => ({ id: itemId++, ...data })
+
+// Gallery Items Data - Mudah untuk maintenance, tinggal tambah/edit tanpa khawatir ID
+const GALLERY_ITEMS_DATA = [
+
+  createItem({
+    src: "/images/vector/vector1.jpg",
+    title: "Portrait Vector Art - Azizi Asadel",
+    category: "vector",
+    likes: 45,
+    uploadDate: new Date(2025, 6, 27),
+    resolution: "785 x 1400 px",
+    tools: "Infinite Design, Pen Tool, Pixellab",
+    width: 785,
+    height: 1400,
+  }),
+
+
+  createItem({
+    src: "/images/fotografi/fotografi1.jpg",
+    title: "Golden Hour Portrait",
+    category: "photography",
+    likes: 67,
+    uploadDate: new Date(2025, 6, 25),
+    resolution: "4096 x 2731 px",
+    tools: "Canon EOS R5, Lightroom, Natural Lighting",
+    width: 400,
+    height: 2675,
+  }),
+
+  createItem({
+    src: "/images/vector/vector2.jpg",
+    title: "Portrait Vector Art - Hijab Style",
+    category: "vector",
+    likes: 52,
+    uploadDate: new Date(2025, 6, 23),
+    resolution: "2002 x 1455 px",
+    tools: "Infinite Design, Pen Tool, Pixellab",
+    width: 2002,
+    height: 1455
+  }),
+
+  // Photography
+  createItem({
+    src: "/images/fotografi/fotografi2.jpg",
+    title: "Urban Architecture Study",
+    category: "photography",
+    likes: 43,
+    uploadDate: new Date(2025, 6, 20),
+    resolution: "3840 x 2560 px",
+    tools: "DSLR Camera, Adobe Lightroom",
+    width: 400,
+    height: 267
+  }),
+
+
+  createItem({
+    src: "/images/vector/vector3.jpg",
+    title: "Portrait Vector Art - Alyssa Ananta",
+    category: "vector",
+    likes: 67,
+    uploadDate: new Date(2025, 6, 16),
+    resolution: "843 x 1138 px",
+    tools: "Adobe Illustrator, Photoshop, Digital Effects",
+    width: 843,
+    height: 1138
+  }),
+
+
+  createItem({
+    src: "/images/fotografi/fotografi3.jpg",
+    title: "Sunset Landscape",
+    category: "photography",
+    likes: 38,
+    uploadDate: new Date(2025, 6, 12),
+    resolution: "2048 x 1536 px",
+    tools: "Photoshop, Color Theory, Digital Art",
+    width: 400,
+    height: 300
+  }),
+
+  createItem({
+    src: "/images/vector/vector4.jpg",
+    title: "Robert Downey Jr Portrait",
+    category: "vector",
+    likes: 58,
+    uploadDate: new Date(2025, 5, 15),
+    resolution: "3000 x 4000 px",
+    tools: "Digital Painting, Photoshop, Color Grading",
+    width: 400,
+    height: 533
+  }),
+
+  createItem({
+    src: "/images/fotografi/fotografi4.jpg",
+    title: "Street Photography",
+    category: "photography",
+    likes: 42,
+    uploadDate: new Date(2025, 5, 10),
+    resolution: "2048 x 1536 px",
+    tools: "Wide Angle Lens, HDR Processing",
+    width: 400,
+    height: 300
+  }),
+
+
+  createItem({
+    src: "/images/vector/vector5.jpg",
+    title: "Abstract Vector Design",
+    category: "vector",
+    likes: 56,
+    uploadDate: new Date(2025, 5, 5),
+    resolution: "2048 x 1536 px",
+    tools: "Vector Art, Abstract Design",
+    width: 400,
+    height: 300
+  }),
+
+  createItem({
+    src: "/images/fotografi/fotografi5.jpg",
+    title: "Natural Landscape",
+    category: "photography",
+    likes: 51,
+    uploadDate: new Date(2025, 4, 30),
+    resolution: "2048 x 1536 px",
+    tools: "Drone Photography, Color Grading",
+    width: 400,
+    height: 300
+  }),
+
+
+  createItem({
+    src: "/images/fotografi/fotografi6.jpg",
+    title: "Urban Portrait",
+    category: "photography",
+    likes: 29,
+    uploadDate: new Date(2025, 4, 25),
+    resolution: "2048 x 1536 px",
+    tools: "Street Photography, Natural Light",
+    width: 400,
+    height: 300
+  }),
+
+
+  createItem({
+    src: "/images/fotografi/fotografi7.jpg",
+    title: "Minimalist Composition", 
+    category: "photography",
+    likes: 47,
+    uploadDate: new Date(2025, 4, 20),
+    resolution: "2048 x 1536 px",
+    tools: "Composition Study, Lightroom",
+    width: 400,
+    height: 300
+  }),
+
+  
+  createItem({
+    src: "/images/fotografi/fotografi8.jpg",
+    title: "Street Art Documentation",
+    category: "photography",
+    likes: 35,
+    uploadDate: new Date(2025, 4, 15),
+    resolution: "2048 x 1536 px",
+    tools: "Documentary Photography, Color Pop",
+    width: 400,
+    height: 300
+  }),
+
+
+  createItem({
+    src: "/images/fotografi/fotografi9.jpg",
+    title: "Nature Macro",
+    category: "photography",
+    likes: 61,
+    uploadDate: new Date(2025, 4, 10),
+    resolution: "2048 x 1536 px",
+    tools: "Macro Lens, Focus Stacking",
+    width: 400,
+    height: 300
+  }),
+
+
+  createItem({
+    src: "/images/fotografi/fotografi10.jpg",
+    title: "Sunset Silhouette",
+    category: "photography",
+    likes: 73,
+    uploadDate: new Date(2025, 4, 5),
+    resolution: "2048 x 1536 px",
+    tools: "Golden Hour, Silhouette Technique",
+    width: 400,
+    height: 300
+  }),
+
+
+  createItem({
+    src: "/images/fotografi/fotografi11.jpg",
+    title: "Abstract Patterns",
+    category: "photography",
+    likes: 44,
+    uploadDate: new Date(2025, 3, 30),
+    resolution: "2048 x 1536 px",
+    tools: "Pattern Recognition, Geometric Study",
+    width: 400,
+    height: 300
+  }),
+
+  createItem({
+    src: "/images/fotografi/fotografi12.jpg",
+    title: "Motion Blur Study",
+    category: "photography",
+    likes: 33,
+    uploadDate: new Date(2025, 3, 25),
+    resolution: "2048 x 1536 px",
+    tools: "Long Exposure, Motion Capture",
+    width: 400,
+    height: 300
+  }),
+]
+
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
+const createAlternatingPattern = (items: GalleryItem[]): GalleryItem[] => {
+  const vectors = items.filter(item => item.category === 'vector')
+  const photography = items.filter(item => item.category === 'photography')
+  
+  // Sort each category by date (newest first)
+  const sortedVectors = vectors.sort((a, b) => b.uploadDate.getTime() - a.uploadDate.getTime())
+  const sortedPhotography = photography.sort((a, b) => b.uploadDate.getTime() - a.uploadDate.getTime())
+  
+  const result: GalleryItem[] = []
+  const maxLength = Math.max(sortedVectors.length, sortedPhotography.length)
+  
+  // Alternate between vector and photography, starting with featured items
+  const featuredItems = items.filter(item => item.featured).sort((a, b) => b.uploadDate.getTime() - a.uploadDate.getTime())
+  const nonFeaturedVectors = sortedVectors.filter(item => !item.featured)
+  const nonFeaturedPhotography = sortedPhotography.filter(item => !item.featured)
+  
+  // Add featured items first
+  result.push(...featuredItems)
+  
+  // Then alternate the rest
+  let vectorIndex = 0
+  let photoIndex = 0
+  let shouldAddVector = true // Start with vector after featured items
+  
+  while (vectorIndex < nonFeaturedVectors.length || photoIndex < nonFeaturedPhotography.length) {
+    if (shouldAddVector && vectorIndex < nonFeaturedVectors.length) {
+      result.push(nonFeaturedVectors[vectorIndex])
+      vectorIndex++
+    } else if (!shouldAddVector && photoIndex < nonFeaturedPhotography.length) {
+      result.push(nonFeaturedPhotography[photoIndex])
+      photoIndex++
+    } else if (vectorIndex < nonFeaturedVectors.length) {
+      result.push(nonFeaturedVectors[vectorIndex])
+      vectorIndex++
+    } else if (photoIndex < nonFeaturedPhotography.length) {
+      result.push(nonFeaturedPhotography[photoIndex])
+      photoIndex++
+    }
+    
+    shouldAddVector = !shouldAddVector
+  }
+  
+  return result
+}
+
+// Final Gallery Items dengan pattern alternating
+const galleryItems = createAlternatingPattern(GALLERY_ITEMS_DATA)
 
 // Skeleton Component
 const ImageSkeleton = ({ aspectRatio = "auto" }: { aspectRatio?: string }) => (
@@ -96,13 +377,24 @@ const GalleryItemComponent = ({
         shouldLoad && imageLoaded 
           ? 'opacity-100 transform translate-y-0' 
           : 'opacity-0 transform translate-y-4'
-      }`}
+      } ${item.featured ? 'ring-2 ring-amber-600/30 ring-offset-2 ring-offset-stone-950' : ''}`}
       onClick={onClick}
       style={{
         transitionDelay: `${index * 50}ms` // Staggered animation
       }}
     >
-      <div className="relative overflow-hidden rounded-xl border border-stone-700 hover:border-amber-600 transition-all duration-500 hover:shadow-2xl hover:shadow-amber-600/10 group-hover:scale-[1.02]">
+      <div className={`relative overflow-hidden rounded-xl border transition-all duration-500 hover:shadow-2xl group-hover:scale-[1.02] ${
+        item.featured 
+          ? 'border-amber-600/50 hover:border-amber-600 hover:shadow-amber-600/20' 
+          : 'border-stone-700 hover:border-amber-600 hover:shadow-amber-600/10'
+      }`}>
+        
+        {/* Featured Badge */}
+        {item.featured && (
+          <div className="absolute top-3 left-3 z-20 bg-gradient-to-r from-amber-600 to-orange-600 text-stone-950 text-xs font-bold px-2 py-1 rounded-full">
+            Featured
+          </div>
+        )}
         
         {/* Show skeleton while loading */}
         {!imageLoaded && shouldLoad && (
@@ -131,13 +423,8 @@ const GalleryItemComponent = ({
               loading={index < 6 ? "eager" : "lazy"}
               quality={85}
               placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWWRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             />
-            
-            {/* Watermark */}
-            <div className="absolute bottom-2 right-2 text-xs text-white/30 font-mono">
-              naaufal
-            </div>
             
             {/* Hover Overlay */}
             <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-all duration-500 flex items-end ${
@@ -145,7 +432,10 @@ const GalleryItemComponent = ({
             }`}>
               <div className="p-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                 <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
-                <p className="text-xs text-orange-200 mb-2 capitalize">{item.category}</p>
+                <p className="text-xs text-orange-200 mb-2 capitalize flex items-center gap-1">
+                  {item.category === 'vector' ? <Palette className="w-3 h-3" /> : <Camera className="w-3 h-3" />}
+                  {item.category === 'vector' ? 'Vector Art' : 'Photography'}
+                </p>
                 <div className="flex items-center gap-2 text-xs">
                   <Heart className="w-3 h-3" />
                   <span>{item.likes}</span>
@@ -289,213 +579,6 @@ const Gallery = () => {
     }
   }
 
-  const galleryItems: GalleryItem[] = [
-    {
-      id: 1,
-      src: "/images/vector/vector1.jpg",
-      title: "Portrait Vector Art - Hijab Style",
-      category: "vector",
-      likes: 45,
-      uploadDate: new Date(2025, 6, 27),
-      resolution: "2000 x 2400 px",
-      tools: "Adobe Illustrator, Pen Tool, Gradient Mesh",
-      width: 400,
-      height: 480
-    },
-    {
-      id: 2,
-      src: "/images/vector/vector2.jpg",
-      title: "Portrait Vector Art - Alyssa",
-      category: "vector",
-      likes: 52,
-      uploadDate: new Date(2025, 6, 23),
-      resolution: "1800 x 2200 px",
-      tools: "Adobe Illustrator, Typography Design",
-      width: 400,
-      height: 489
-    },
-    {
-      id: 3,
-      src: "/images/vector/vector3.jpg",
-      title: "Electric Crack Portrait",
-      category: "vector",
-      likes: 67,
-      uploadDate: new Date(2025, 6, 16),
-      resolution: "2400 x 2400 px",
-      tools: "Adobe Illustrator, Photoshop, Digital Effects",
-      width: 400,
-      height: 400
-    },
-    {
-      id: 4,
-      src: "/images/fotografi/fotografi1.jpg",
-      title: "Golden Hour Cityscape",
-      category: "photography",
-      likes: 38,
-      uploadDate: new Date(2025, 5, 30),
-      resolution: "4096 x 2731 px",
-      tools: "Canon EOS R5, Lightroom, Natural Lighting",
-      width: 400,
-      height: 267
-    },
-    {
-      id: 5,
-      src: "/images/vector/vector4.jpg",
-      title: "Robert Downey Jr Portrait",
-      category: "vector",
-      likes: 38,
-      uploadDate: new Date(2025, 5, 15),
-      resolution: "3000 x 4000 px",
-      tools: "Digital Painting, Photoshop, Color Grading",
-      width: 400,
-      height: 533
-    },
-    {
-      id: 6,
-      src: "/images/fotografi/fotografi2.jpg",
-      title: "Sample Photography",
-      category: "photography",
-      likes: 38,
-      uploadDate: new Date(2025, 4, 30),
-      resolution: "3840 x 2560 px",
-      tools: "DSLR Camera, Adobe Lightroom",
-      width: 400,
-      height: 267
-    },
-    {
-      id: 7,
-      src: "/images/fotografi/fotografi3.jpg",
-      title: "Color Palette Study",
-      category: "photography",
-      likes: 38,
-      uploadDate: new Date(2025, 3, 30),
-      resolution: "2048 x 1536 px",
-      tools: "Photoshop, Color Theory, Digital Art",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 8,
-      src: "/images/fotografi/fotografi4.jpg",
-      title: "Architectural Study",
-      category: "photography",
-      likes: 42,
-      uploadDate: new Date(2025, 3, 25),
-      resolution: "2048 x 1536 px",
-      tools: "Wide Angle Lens, HDR Processing",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 9,
-      src: "/images/fotografi/fotografi5.jpg",
-      title: "Natural Landscape",
-      category: "photography",
-      likes: 51,
-      uploadDate: new Date(2025, 3, 20),
-      resolution: "2048 x 1536 px",
-      tools: "Drone Photography, Color Grading",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 10,
-      src: "/images/fotografi/fotografi6.jpg",
-      title: "Urban Portrait",
-      category: "photography",
-      likes: 29,
-      uploadDate: new Date(2025, 3, 15),
-      resolution: "2048 x 1536 px",
-      tools: "Street Photography, Natural Light",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 11,
-      src: "/images/fotografi/fotografi7.jpg",
-      title: "Minimalist Composition",
-      category: "photography",
-      likes: 47,
-      uploadDate: new Date(2025, 3, 10),
-      resolution: "2048 x 1536 px",
-      tools: "Composition Study, Lightroom",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 12,
-      src: "/images/fotografi/fotografi8.jpg",
-      title: "Street Art Documentation",
-      category: "photography",
-      likes: 35,
-      uploadDate: new Date(2025, 3, 5),
-      resolution: "2048 x 1536 px",
-      tools: "Documentary Photography, Color Pop",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 13,
-      src: "/images/fotografi/fotografi9.jpg",
-      title: "Nature Macro",
-      category: "photography",
-      likes: 61,
-      uploadDate: new Date(2025, 2, 28),
-      resolution: "2048 x 1536 px",
-      tools: "Macro Lens, Focus Stacking",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 14,
-      src: "/images/fotografi/fotografi10.jpg",
-      title: "Sunset Silhouette",
-      category: "photography",
-      likes: 73,
-      uploadDate: new Date(2025, 2, 25),
-      resolution: "2048 x 1536 px",
-      tools: "Golden Hour, Silhouette Technique",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 15,
-      src: "/images/fotografi/fotografi11.jpg",
-      title: "Abstract Patterns",
-      category: "photography",
-      likes: 44,
-      uploadDate: new Date(2025, 2, 20),
-      resolution: "2048 x 1536 px",
-      tools: "Pattern Recognition, Geometric Study",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 16,
-      src: "/images/fotografi/fotografi12.jpg",
-      title: "Motion Blur Study",
-      category: "photography",
-      likes: 33,
-      uploadDate: new Date(2025, 2, 15),
-      resolution: "2048 x 1536 px",
-      tools: "Long Exposure, Motion Capture",
-      width: 400,
-      height: 300
-    },
-    {
-      id: 17,
-      src: "/images/vector/vector5.jpg",
-      title: "Abstract Vector Design",
-      category: "vector",
-      likes: 56,
-      uploadDate: new Date(2025, 2, 10),
-      resolution: "2048 x 1536 px",
-      tools: "Vector Art, Abstract Design",
-      width: 400,
-      height: 300
-    },
-  ]
-
   const filteredItems = filter === "all" ? galleryItems : galleryItems.filter((item) => item.category === filter)
 
   const getCurrentIndex = () => {
@@ -516,6 +599,11 @@ const Gallery = () => {
 
     setSelectedImage(filteredItems[newIndex])
   }
+
+  // Get category counts
+  const vectorCount = galleryItems.filter(item => item.category === "vector").length
+  const photographyCount = galleryItems.filter(item => item.category === "photography").length
+  const featuredCount = galleryItems.filter(item => item.featured).length
 
   return (
     <>
@@ -558,8 +646,17 @@ const Gallery = () => {
             <h1 className="text-4xl md:text-5xl font-bold mb-4 text-stone-100">Gallery</h1>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 mx-auto rounded-full mb-6" />
             <p className="text-xl text-stone-400 max-w-2xl mx-auto">
-              Koleksi karya vector art dan fotografi pemandangan yang telah saya buat
+              Koleksi karya vector art dan fotografi yang telah saya buat dengan susunan alternating untuk variasi visual yang menarik
             </p>
+            
+            {/* Stats */}
+            <div className="flex justify-center gap-6 mt-6 text-sm text-stone-500">
+              <span>{galleryItems.length} Total Works</span>
+              <span>•</span>
+              <span>{featuredCount} Featured</span>
+              <span>•</span>
+              <span>Mixed Layout</span>
+            </div>
           </div>
 
           {/* Filter Buttons */}
@@ -583,7 +680,7 @@ const Gallery = () => {
               className={`flex items-center gap-2 ${filter === "vector" ? "bg-amber-600 hover:bg-amber-700" : "border-stone-600 text-stone-400 hover:border-amber-600 hover:text-amber-600"}`}
             >
               <Palette className="w-4 h-4" />
-              Vector Art ({galleryItems.filter((item) => item.category === "vector").length})
+              Vector Art ({vectorCount})
             </Button>
             <Button
               variant={filter === "photography" ? "default" : "outline"}
@@ -591,7 +688,7 @@ const Gallery = () => {
               className={`flex items-center gap-2 ${filter === "photography" ? "bg-amber-600 hover:bg-amber-700" : "border-stone-600 text-stone-400 hover:border-amber-600 hover:text-amber-600"}`}
             >
               <Camera className="w-4 h-4" />
-              Photography ({galleryItems.filter((item) => item.category === "photography").length})
+              Photography ({photographyCount})
             </Button>
           </div>
 
@@ -648,6 +745,11 @@ const Gallery = () => {
                     <span className="text-stone-950 font-bold text-sm">N</span>
                   </div>
                   <span className="text-white font-medium">naaufal</span>
+                  {selectedImage.featured && (
+                    <span className="bg-amber-600 text-stone-950 text-xs font-bold px-2 py-1 rounded-full ml-2">
+                      Featured
+                    </span>
+                  )}
                 </div>
                 
                 <div className="flex items-center gap-2">
@@ -761,12 +863,7 @@ const Gallery = () => {
                   className="max-w-full max-h-full object-contain"
                   quality={95}
                   priority
-                />
-                
-                {/* Image watermark on modal */}
-                <div className="absolute bottom-4 right-4 text-white/20 text-sm font-mono">
-                  © naaufal
-                </div>
+                />          
               </div>
 
               {/* Bottom Info Panel */}
@@ -783,7 +880,12 @@ const Gallery = () => {
                           {selectedImage.likes} likes
                         </span>
                         <span>{getRelativeTime(selectedImage.uploadDate)}</span>
-                        <span className="px-2 py-1 bg-amber-600/20 text-amber-400 rounded text-xs font-medium capitalize">
+                        <span className={`px-2 py-1 rounded text-xs font-medium capitalize flex items-center gap-1 ${
+                          selectedImage.category === "vector" 
+                            ? "bg-purple-600/20 text-purple-400" 
+                            : "bg-blue-600/20 text-blue-400"
+                        }`}>
+                          {selectedImage.category === "vector" ? <Palette className="w-3 h-3" /> : <Camera className="w-3 h-3" />}
                           {selectedImage.category === "vector" ? "Vector Art" : "Photography"}
                         </span>
                       </div>
@@ -882,4 +984,4 @@ const Gallery = () => {
   )
 }
 
-export default Gallery
+export default Gallery  
