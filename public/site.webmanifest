@@ -1,0 +1,27 @@
+{
+  "name": "Naufal Portfolio",
+  "short_name": "Naufal",
+  "description": "Vector Artist & Backend Developer Portfolio",
+  "icons": [
+    {
+      "src": "/icon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#d97706",
+  "background_color": "#0c0a09",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}
