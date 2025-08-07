@@ -6,8 +6,7 @@ import Contact from "@/components/contact"
 import Navigation from "@/components/navigation"
 import BackToTop from "@/components/back-to-top"
 import Services from "@/components/services"
-
-
+import { Analytics } from "@vercel/analytics/react" // ✅ Perbaikan di sini
 
 export default function Home() {
   return (
@@ -20,6 +19,7 @@ export default function Home() {
       <Services />
       <Contact />
       <BackToTop />
+      <Analytics /> {/* ✅ Komponen tetap digunakan seperti biasa */}
     </main>
   )
 }
